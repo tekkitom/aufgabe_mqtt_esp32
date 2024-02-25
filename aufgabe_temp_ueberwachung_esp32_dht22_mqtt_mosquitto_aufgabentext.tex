@@ -1,4 +1,4 @@
-\documentclass[paper = a4]{scrartcl}
+\documentclass[paper = a4]{scrreprt}
 \usepackage[german]{babel}
 \usepackage[utf8]{inputenc}
 % \usepackage{times}
@@ -13,27 +13,41 @@
 \usepackage{gensymb}
 
 %opening
-\title{Umwelt Messungen mit MQTT / ESP32 / Raspberry Pi}
+\title{Umwelt Messungen mit Arduino Uno R3, Raspberry Pi und MQTT}
+\subtitle{Messen - Kommunizieren - Verarbeiten - Steuern}
 \author{Ma}
 
 \begin{document}
 
 \maketitle
 
-\begin{abstract}
-In Rechenzentren, der Schule und anderen Szenarien sollen Umweltdaten erfasst werden. Abhängig von Messwerten sollen Aktionen ausgelöst werden (Info, Alarm, \dots)
+\tableofcontents
+\chapter{Einleitung}
+In Rechenzentren, der Schule und anderen Szenarien sollen Umweltdaten erfasst werden. Abhängig von Messwerten sollen Aktionen ausgelöst werden (Info, Alarm, \dots).
 
+Im Kapitel \ref{sec:Sensor} befasse ich mich mit allgemeinen Fragen: Wie wird eine Temperatur gemessen?
 
-\end{abstract}
+Wie kommt die Information über den Temperatur-Wert in den Controller. Damit beschäftige ich mich in Kapitel \ref{sec:SensorAnController}.
 
-\section{Weg der Information Sensor - Programm - Aktor}
+Kapitel \ref{sec:AusgabeLed} befasst sich mit der Frage: wie kann ich eine LED ein- und ausschalten. Zum Beispiel in Abhängigkeit eines Messwerts aus  Kapitel \ref{sec:Sensor}.
+
+Im Kapitel \ref{sec:Mqtt} befasse ich mich mit der Erweiterung der Schaltung und lasse die gemessenen Daten vom Raspberry Pi zu einem Server (MQTT-Server) übertragen. Bei dem MQTT-Server abonnieren Clients die Messwerte und lassen sich über den aktuellen Wert und Veränderungen informieren.
+
+Das Kapitel \ref{sec:MotorAnsteuern} befasst sich mit leistungsstärkeren Verbrauchern, die von dem Controller (Arduino Uno R3, Raspberry Pi, \dots) gesteuert werden sollen. Wie man die Signale des Controllers passend verstärkt und was man bei Relais unbedingt beachten sollte ist hier der Inhalt des Kapitels.
+
+Final im Kapitel \ref{sec:BusseI2cSpi} befasse ich mich mit Sensoren, die ihre Messwerte nicht als analoge Spannung liefern, sonder in digitaler Form. $I^2C$ und SPI sind hier typische Transportmittel, sogenannte Busse. RS232 kann man zusätzlich zur Kommunikation mit dem PC verwenden. Spoiler: ein Arduino Uno R3 ist per USB am PC angeschlossen, eigentlich kommunizieren die beiden nicht über USB.
+
+% \end{abstract}
+
+\chapter{Weg der Information Sensor - Programm - Aktor}
+\label{sec:Sensor}
 Temperaturmessung ist in der Regel einfach \dots Ein Blick auf ein Thermometer verschafft die gewünschte Information. Bei Luftfeuchtigkeit ist es der Hydrometer.
 
 Lediglich die Zugänglichkeit ist eingeschränkt. Ich muss physisch an den Ort des Messgeräts kommen.
 
 Die Automation soll hier helfen. Die Messung soll automatisch erfolgen, bei Bedarf sollen automatisch Aktionen ausgelöst werden.
 
-\subsection{Messung}
+\section{Messung}
 Das Thermometer beruht auf dem physikalischen Prinzip: je wärmer desto mehr dehnt sich ein Körper aus.
 
 ein Pt 100 ist ein solcher Sensor. Hier wird per Widerstandsänderung die Temperatur bestimmt.
@@ -45,10 +59,12 @@ Bei Veränderung der Temperatur verändert sich auch der Widerstandswert. Der Se
 % Welche Form hat die Kennliene eines PTC Sensors? {= ansteigend bei Temperaturerhöhung ~abfallend bei Temperaturerhöhung  ~gleichbleibend bei Temperaturerhöhung  ~wellenförmiger Verlauf bei Temperaturerhöhung }
 % Welche Form hat die Kennliene eines NTC Sensors? {=abfallend bei Temperaturerhöhung ~ansteigend bei Temperaturerhöhung ~gleichbleibend bei Temperaturerhöhung  ~wellenförmiger Verlauf bei Temperaturerhöhung }
 
-\subsection{Messverfahren}
+\section{Messverfahren}
 Die Veränderung des Widerstandswerts kann man mit einem passenden Messgerät (Widerstandsmessgerät alternativ Multimeter) beobachten. Zur automatischen Messung ist dies nur bedingt geeignet. Dass Messgerät muss dann über eine Datenschnittstelle mit dem Controller / Computer verbunden werden.
 
-Alternativ lässt sich an einem Raspberry Pi, Arduino (Uno R3) oder anderen Controllern eine Spannung messen und als digitaler Wert abspeichern.
+\chapter{Von der Temperatur in den Controller}
+\label{sec:SensorAnController}
+Für die Messung mit dem Controller / Computer müssen die Informationen passend aufbereitet werden. Ein Raspberry Pi, Arduino (Uno R3) oder andere Controller können eine Spannung messen und als digitaler Wert abspeichern/verarbeiten.
 
 \begin{wrapfigure}{l}{0.5\textwidth}
  \centering
@@ -58,27 +74,30 @@ Alternativ lässt sich an einem Raspberry Pi, Arduino (Uno R3) oder anderen Cont
  \label{abb:Schaltung1QuelleEinWiderstand}
 \end{wrapfigure}
 
-Die Spannungsquelle links im Bild steht symbolisch für den Controller (Arduino Uno R3). Am Widerstand R fällt die gesamte Spannung ab, die die Quelle zur Verfügung stellt (hier 5 V). Durch den Widerstand fließt ein Strom, er wird wie folgt berechnet $I = \frac{U}{R}$ (I = Stromstärke, U = Spannung R = Widerstandswert)
+Die Spannungsquelle (Kreis, links im Bild) steht symbolisch für den Controller (Arduino Uno R3). Am Widerstand R fällt die gesamte Spannung ab\footnote{genaugenommen wird die Energie in Wärme umgewandelt.}, die die Quelle zur Verfügung stellt (hier 5 V). Durch den Widerstand fließt ein Strom, er wird wie folgt berechnet $I = \frac{U}{R}$ (I = Stromstärke, U = Spannung R = Widerstandswert).
 
-$I = \frac{5 V}{100 \Omega} = 0,05 A = 50 mA$ Der Arduino liefert maximal 20 mA, man sollte nicht mehr als 10 mA beziehen. Eine Möglichkeit ist hier den Widerstandswert von $100 \Omega$ auf $500 \Omega$ oder $1000 \Omega$ zu ändern. $\Omega$ist das Formelzeichen für Ohm.
+Wenn ich eine Spannung von $U_0 = 5\,V$ und einen Widerstand von $R = 100\  \Omega$ verwende erhalte ich folgende Werte: \\
+$I = \frac{5 V}{100\ \Omega} = 0,05\, A = 50\ mA$ Der Arduino liefert an den Ausgangspins maximal 20 mA, man sollte nicht mehr als 10 mA beziehen. Eine Möglichkeit ist hier den Widerstandswert von $100 \ \Omega$ auf $500 \ \Omega$ oder $1000\ \Omega$ zu ändern\footnote{$\Omega$ ist das Formelzeichen für Ohm.}.
 
 Leider kann der Arduino nur entweder den Widerstand mit Energie (Spannung und Strom) versorgen oder eine Messung der Spannung am Widerstand durchführen. Die Messung wäre hier im Übrigen 5 V, die Spannung der Versorgung. bei einer Veränderung der Temperatur verändert sich der Wert des Widerstands, jedoch nicht die Spannung, da der Controller (Arduino Uno R3) ggf. mehr Strom liefert.
 
 Eine Strommessung wäre die Lösung, leider unterstützt der Arduino Uno R3 dies nicht direkt.
 
-\begin{wrapfigure}{l}{0.5\textwidth}
+% \begin{wrapfigure}{l}{0.5\textwidth}
+\begin{figure}%{l}{0.5\textwidth}
   \centering
   \includesvg[width = 0.4\textwidth]{messung2_widerstand_quelle_zwei_widerstaende_in_reihe.svg}
   % aufgabe_temp_ueberwachung_esp32_dht22_mqtt_mosquitto_systemplan.svg: 0x0 px, 300dpi, 0.00x0.00 cm, bb=
   \caption{Schaltung 2 Quelle mit zwei Widerständen in Reihe}
   \label{abb:Schaltung2QuelleZweiWiderstaende}
-\end{wrapfigure}
+% \end{wrapfigure}
+\end{figure}
 
 Daher muss ich eine relative Messung durchführen. Wenn ich mehrere Widerstände in Reihe schalte (der Strom muss dann durch Widerstand $R_1$, dann durch Widerstand $R_2$, \dots) addieren sich die Spannungen, die an den einzelnen Widerständen abfallen.
 
-$U_0 = U_1 + U_2$ Bei beiden Widerständen gilt weiter $U = I * R$ (die Formel von oben nach I aufgelöst)
+$U_0 = U_1 + U_2$ Bei beiden Widerständen gilt weiter $U = I * R$ (die Formel von oben nach I aufgelöst).
 
-Wenn beide Widerstände identische Werte haben, teilt sich $U_0$ jeweils zu 50\% in $U_1$ und $U_2$ auf. $R_2$
+Wenn beide Widerstände identische Werte haben, teilt sich $U_0$ jeweils zu 50\,\% in $U_1$ und $U_2$ auf $R_2$.
 
 $U_0 = U_1 + U_2$
 
@@ -86,17 +105,26 @@ $U_2 = U_0 - U_1$
 
 Mit $R_1$ = $R_2$ gilt $U_1 = U_2$ und $U_0 = 2 * U_2$ oder $U_2 = \frac{U_0}{2}$
 
-Der Messwiderstand $R_2$ hat bei $20\degree$ einen Wert von $1000 \Omega$ Ich kann jetzt die Spannung $U_2$ messen und als Eingang (z.B. A0) am Arduino bestimmen lassen.
-\subsection{Aufgabe}
+Der Messwiderstand $R_2$ hat bei $20\degree$ einen Wert von $1000\  \Omega$ Ich kann jetzt die Spannung $U_2$ messen und als Eingang (z.B. A0) am Arduino bestimmen lassen.
+\section{Aufgabe}
 Recherchiere wie man mit einem Arduino Uno R3 (in C/C++) den analogen Wert am Eingang A0 bestimmt und als Variable r0 abspeichert.
 
-\subsection{Aufgabe}
+\section{Aufgabe}
 Stecke auf einer Steckplatine (breadboard) die Schaltung aus Bild \ref{abb:Schaltung2QuelleZweiWiderstaende}.
 
 Die Quelle $U_0$ ist die Spannungsversorgung (PWR, 5V) vom Arduino. der untere Anschluss von $R_2$ wird an einem Pin GND angeschlossen. Der Pin A0 wird an die Verbindung von $R_1$ (unterer Pin) und $R_2$ (oberer Pin) angeschlossen. Beachte die internen Kontakte der Steckplatine. Im mittleren Bereich sind sie quer verbunden, im äußeren längs.
 
 Wenn alles korrekt ist ($R_1 = R_2 = 1000 \Omega$) soll ein Wert von ca. 512 gemessen werden. Ein Wert von ca. 0 oder ca. 1024 ist falsch.
 
+\chapter{Vom Controller zur Aktion}
+\label{sec:AusgabeLed}
 
+\chapter{Mehr als lokale Daten: mit MQTT ins Netzwerk}
+\label{sec:Mqtt}
 
+\chapter{Große Lasten schalten: Motoren und andere Verbraucher}
+\label{sec:MotorAnsteuern}
+
+\chapter{Von Bussen in der Elektronik: I2C und SPI}
+\label{sec:BusseI2cSpi}
 \end{document}

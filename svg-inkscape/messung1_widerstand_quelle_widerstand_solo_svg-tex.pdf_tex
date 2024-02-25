@@ -38,7 +38,7 @@
   \newcommand*\fsize{\dimexpr\f@size pt\relax}%
   \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{473.6698222bp}%
+    \setlength{\unitlength}{336.76672041bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -50,14 +50,15 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.52628819)%
+  \begin{picture}(1,0.72268504)%
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{messung1_widerstand_quelle_widerstand_solo_svg-tex.pdf}}%
-    \put(-0.00354546,0.27699378){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}U0 = 5V\end{tabular}}}}%
+    \put(-0.00486862,0.38036055){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}U0\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=2]{messung1_widerstand_quelle_widerstand_solo_svg-tex.pdf}}%
-    \put(0.76588171,0.30777087){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}R = 100 Ohm\end{tabular}}}}%
+    \put(0.9671639,0.42262283){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}R\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=3]{messung1_widerstand_quelle_widerstand_solo_svg-tex.pdf}}%
-    \put(0.5504421,0){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}I\end{tabular}}}}%
+    \put(0.67132791,-0){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}I\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{messung1_widerstand_quelle_widerstand_solo_svg-tex.pdf}}%
   \end{picture}%
 \endgroup%

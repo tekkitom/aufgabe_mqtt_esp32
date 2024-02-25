@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
-<svg width="17cm" height="9cm" viewBox="0 119 328 175" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="12cm" height="9cm" viewBox="20 119 239 175" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs/>
   <g id="Hintergrund">
     <ellipse style="fill: #ffffff; fill-opacity: 1; stroke-opacity: 1; stroke-width: 2; stroke: #000000" cx="110" cy="190" rx="30" ry="30"/>
@@ -9,18 +9,19 @@
       <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x1="60" y1="160" x2="60" y2="215.528"/>
       <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="55,207.764 60,217.764 65,207.764 "/>
     </g>
-    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="0" y="200">
-      <tspan x="0" y="200">U0 = 5V</tspan>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="20" y="200">
+      <tspan x="20" y="200">U0</tspan>
     </text>
     <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="230,160 230,120 110,120 110,160 "/>
     <polyline style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" points="230,220 230,260 110,260 110,220 "/>
-    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="250" y="190">
-      <tspan x="250" y="190">R = 100 Ohm</tspan>
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="250" y="190">
+      <tspan x="250" y="190">R</tspan>
     </text>
     <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x1="170" y1="260" x2="180" y2="250"/>
     <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x1="170" y1="260" x2="180" y2="270"/>
-    <text font-size="12.7998" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="180" y="290">
+    <text font-size="12.8" style="fill: #000000; fill-opacity: 1; stroke: none;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="180" y="290">
       <tspan x="180" y="290">I </tspan>
     </text>
+    <line style="fill: none; stroke-opacity: 1; stroke-width: 2; stroke: #000000" x1="110" y1="160" x2="110" y2="220"/>
   </g>
 </svg>
