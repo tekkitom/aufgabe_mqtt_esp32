@@ -1,5 +1,16 @@
-\documentclass[a4paper,10pt]{scrartcl}
+\documentclass[paper = a4]{scrartcl}
+\usepackage[german]{babel}
 \usepackage[utf8]{inputenc}
+% \usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{eurosym}
+\usepackage{graphicx}
+\usepackage{ulem}
+% \usepackage{listings}
+\usepackage{multicol}
+\usepackage{svg}
+\usepackage{wrapfig}
+\usepackage{gensymb}
 
 %opening
 \title{Umwelt Messungen mit MQTT / ESP32 / Raspberry Pi}
@@ -12,9 +23,80 @@
 \begin{abstract}
 In Rechenzentren, der Schule und anderen Szenarien sollen Umweltdaten erfasst werden. Abhängig von Messwerten sollen Aktionen ausgelöst werden (Info, Alarm, \dots)
 
-Die Aufgaben
+
 \end{abstract}
 
-\section{}
+\section{Weg der Information Sensor - Programm - Aktor}
+Temperaturmessung ist in der Regel einfach \dots Ein Blick auf ein Thermometer verschafft die gewünschte Information. Bei Luftfeuchtigkeit ist es der Hydrometer.
+
+Lediglich die Zugänglichkeit ist eingeschränkt. Ich muss physisch an den Ort des Messgeräts kommen.
+
+Die Automation soll hier helfen. Die Messung soll automatisch erfolgen, bei Bedarf sollen automatisch Aktionen ausgelöst werden.
+
+\subsection{Messung}
+Das Thermometer beruht auf dem physikalischen Prinzip: je wärmer desto mehr dehnt sich ein Körper aus.
+
+ein Pt 100 ist ein solcher Sensor. Hier wird per Widerstandsänderung die Temperatur bestimmt.
+
+Bei Veränderung der Temperatur verändert sich auch der Widerstandswert. Der Sensor hat einen positiven Temperaturkoeffizient (je wärmer er ist, desto größer ist der Widerstand).
+
+%% Aufgaben
+% Material des Temperatursensors Pt 100{= Platin ~Kupfer ~Kohlenstoff ~Nickel ~Eisen }
+% Welche Form hat die Kennliene eines PTC Sensors? {= ansteigend bei Temperaturerhöhung ~abfallend bei Temperaturerhöhung  ~gleichbleibend bei Temperaturerhöhung  ~wellenförmiger Verlauf bei Temperaturerhöhung }
+% Welche Form hat die Kennliene eines NTC Sensors? {=abfallend bei Temperaturerhöhung ~ansteigend bei Temperaturerhöhung ~gleichbleibend bei Temperaturerhöhung  ~wellenförmiger Verlauf bei Temperaturerhöhung }
+
+\subsection{Messverfahren}
+Die Veränderung des Widerstandswerts kann man mit einem passenden Messgerät (Widerstandsmessgerät alternativ Multimeter) beobachten. Zur automatischen Messung ist dies nur bedingt geeignet. Dass Messgerät muss dann über eine Datenschnittstelle mit dem Controller / Computer verbunden werden.
+
+Alternativ lässt sich an einem Raspberry Pi, Arduino (Uno R3) oder anderen Controllern eine Spannung messen und als digitaler Wert abspeichern.
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+ \centering
+ \includesvg[width = 0.4\textwidth]{messung1_widerstand_quelle_widerstand_solo.svg}
+ % aufgabe_temp_ueberwachung_esp32_dht22_mqtt_mosquitto_systemplan.svg: 0x0 px, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Schaltung1 Quelle mit einem Widerstand}
+ \label{abb:Schaltung1QuelleEinWiderstand}
+\end{wrapfigure}
+
+Die Spannungsquelle links im Bild steht symbolisch für den Controller (Arduino Uno R3). Am Widerstand R fällt die gesamte Spannung ab, die die Quelle zur Verfügung stellt (hier 5 V). Durch den Widerstand fließt ein Strom, er wird wie folgt berechnet $I = \frac{U}{R}$ (I = Stromstärke, U = Spannung R = Widerstandswert)
+
+$I = \frac{5 V}{100 \Omega} = 0,05 A = 50 mA$ Der Arduino liefert maximal 20 mA, man sollte nicht mehr als 10 mA beziehen. Eine Möglichkeit ist hier den Widerstandswert von $100 \Omega$ auf $500 \Omega$ oder $1000 \Omega$ zu ändern. $\Omega$ist das Formelzeichen für Ohm.
+
+Leider kann der Arduino nur entweder den Widerstand mit Energie (Spannung und Strom) versorgen oder eine Messung der Spannung am Widerstand durchführen. Die Messung wäre hier im Übrigen 5 V, die Spannung der Versorgung. bei einer Veränderung der Temperatur verändert sich der Wert des Widerstands, jedoch nicht die Spannung, da der Controller (Arduino Uno R3) ggf. mehr Strom liefert.
+
+Eine Strommessung wäre die Lösung, leider unterstützt der Arduino Uno R3 dies nicht direkt.
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+  \includesvg[width = 0.4\textwidth]{messung2_widerstand_quelle_zwei_widerstaende_in_reihe.svg}
+  % aufgabe_temp_ueberwachung_esp32_dht22_mqtt_mosquitto_systemplan.svg: 0x0 px, 300dpi, 0.00x0.00 cm, bb=
+  \caption{Schaltung 2 Quelle mit zwei Widerständen in Reihe}
+  \label{abb:Schaltung2QuelleZweiWiderstaende}
+\end{wrapfigure}
+
+Daher muss ich eine relative Messung durchführen. Wenn ich mehrere Widerstände in Reihe schalte (der Strom muss dann durch Widerstand $R_1$, dann durch Widerstand $R_2$, \dots) addieren sich die Spannungen, die an den einzelnen Widerständen abfallen.
+
+$U_0 = U_1 + U_2$ Bei beiden Widerständen gilt weiter $U = I * R$ (die Formel von oben nach I aufgelöst)
+
+Wenn beide Widerstände identische Werte haben, teilt sich $U_0$ jeweils zu 50\% in $U_1$ und $U_2$ auf. $R_2$
+
+$U_0 = U_1 + U_2$
+
+$U_2 = U_0 - U_1$
+
+Mit $R_1$ = $R_2$ gilt $U_1 = U_2$ und $U_0 = 2 * U_2$ oder $U_2 = \frac{U_0}{2}$
+
+Der Messwiderstand $R_2$ hat bei $20\degree$ einen Wert von $1000 \Omega$ Ich kann jetzt die Spannung $U_2$ messen und als Eingang (z.B. A0) am Arduino bestimmen lassen.
+\subsection{Aufgabe}
+Recherchiere wie man mit einem Arduino Uno R3 (in C/C++) den analogen Wert am Eingang A0 bestimmt und als Variable r0 abspeichert.
+
+\subsection{Aufgabe}
+Stecke auf einer Steckplatine (breadboard) die Schaltung aus Bild \ref{abb:Schaltung2QuelleZweiWiderstaende}.
+
+Die Quelle $U_0$ ist die Spannungsversorgung (PWR, 5V) vom Arduino. der untere Anschluss von $R_2$ wird an einem Pin GND angeschlossen. Der Pin A0 wird an die Verbindung von $R_1$ (unterer Pin) und $R_2$ (oberer Pin) angeschlossen. Beachte die internen Kontakte der Steckplatine. Im mittleren Bereich sind sie quer verbunden, im äußeren längs.
+
+Wenn alles korrekt ist ($R_1 = R_2 = 1000 \Omega$) soll ein Wert von ca. 512 gemessen werden. Ein Wert von ca. 0 oder ca. 1024 ist falsch.
+
+
 
 \end{document}
