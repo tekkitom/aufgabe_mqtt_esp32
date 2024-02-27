@@ -13,7 +13,7 @@
 \usepackage{gensymb}
 
 %opening
-\title{Umwelt Messungen mit Arduino Uno R3, Raspberry Pi und MQTT}
+\title{Umwelt Messungen mit Arduino Uno R3, Raspberry Pi Pi Pico und MQTT}
 \subtitle{Messen - Kommunizieren - Verarbeiten - Steuern}
 \author{Ma}
 
@@ -25,17 +25,17 @@
 \chapter{Einleitung}
 In Rechenzentren, der Schule und anderen Szenarien sollen Umweltdaten erfasst werden. Abhängig von Messwerten sollen Aktionen ausgelöst werden (Info, Alarm, \dots).
 
-Im Kapitel \ref{chapter:Sensor} befasse ich mich mit allgemeinen Fragen: Wie wird eine Temperatur gemessen?
+Im Kapitel \ref{chapter:Sensor} befasse ich mich mit allgemeinen Fragen der Messtechnik: Wie wird eine Temperatur gemessen?
 
-Wie kommt die Information über den Temperatur-Wert in den Controller. Damit beschäftige ich mich in Kapitel \ref{chapter:SensorAnController}.
+Wie die Information über den Temperatur-Wert in den Controller kommt, damit beschäftige ich mich in Kapitel \ref{chapter:SensorAnController}.
 
-Kapitel \ref{chapter:AusgabeLed} befasst sich mit der Frage: wie kann ich eine LED ein- und ausschalten. Zum Beispiel in Abhängigkeit eines Messwerts aus  Kapitel \ref{chapter:Sensor}.
+Kapitel \ref{chapter:AusgabeLed} befasst sich mit der Frage: Wie kann ich kleine Verbraucher, z.B. eine LED, ein- und ausschalten. Zum Beispiel in Abhängigkeit eines Messwerts aus  Kapitel \ref{chapter:Sensor}.
 
-Im Kapitel \ref{chapter:Mqtt} befasse ich mich mit der Erweiterung der Schaltung und lasse die gemessenen Daten vom Raspberry Pi zu einem Server (MQTT-Server) übertragen. Bei dem MQTT-Server abonnieren Clients die Messwerte und lassen sich über den aktuellen Wert und Veränderungen informieren.
+Im Kapitel \ref{chapter:Mqtt} befasse ich mich mit der Erweiterung der Schaltung und lasse die gemessenen Daten vom Raspberry Pi /Raspberry Pi pico zu einem Server (MQTT-Server) übertragen. Bei dem MQTT-Server abonnieren Clients die Messwerte und lassen sich über den aktuellen Wert und Veränderungen informieren.
 
-Das Kapitel \ref{chapter:MotorAnsteuern} befasst sich mit leistungsstärkeren Verbrauchern, die von dem Controller (Arduino Uno R3, Raspberry Pi, \dots) gesteuert werden sollen. Wie man die Signale des Controllers passend verstärkt und was man bei Relais unbedingt beachten sollte ist hier der Inhalt des Kapitels.
+Das Kapitel \ref{chapter:MotorAnsteuern} befasst sich mit leistungsstärkeren Verbrauchern, die von dem Controller (Arduino Uno R3, Raspberry Pi, \dots) gesteuert werden sollen. Wie man die Signale des Controllers passend verstärkt, und was man bei Relais unbedingt beachten sollte, ist hier der Inhalt des Kapitels.
 
-Final im Kapitel \ref{chapter:BusseI2cSpi} befasse ich mich mit Sensoren, die ihre Messwerte nicht als analoge Spannung liefern, sonder in digitaler Form. $I^2C$ und SPI sind hier typische Transportmittel, sogenannte Busse. RS232 kann man zusätzlich zur Kommunikation mit dem PC verwenden. Spoiler: ein Arduino Uno R3 ist per USB am PC angeschlossen, eigentlich kommunizieren die beiden nicht über USB.
+Final im Kapitel \ref{chapter:BusseI2cSpi} befasse ich mich mit Sensoren, die ihre Messwerte nicht als analoge Spannung liefern, sonder in digitaler Form. $I^2C$ und SPI sind hier typische Transportmittel, sogenannte Busse der Controller. RS232 kann man zusätzlich zur Kommunikation mit dem PC verwenden. Spoiler: ein Arduino Uno R3 ist per USB am PC angeschlossen, eigentlich kommunizieren die beiden nicht über USB.
 
 % \end{abstract}
 
