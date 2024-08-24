@@ -1,0 +1,21 @@
+::Material Pt100::Aus welchem Material besteht der Temperatursensors Pt 100?{
+= Platin
+~Kupfer
+~Kohlenstoff
+~Nickel
+~Eisen
+}
+
+::Kennlinie PTC::Welche Form hat die Kennlinie eines PTC Sensors?{
+= ansteigend bei Temperaturerhöhung 
+~abfallend bei Temperaturerhöhung  
+~gleichbleibend bei Temperaturerhöhung  
+~wellenförmiger Verlauf bei Temperaturerhöhung
+}
+
+::Kennlinie NTC::Welche Form hat die Kennlinie eines NTC Sensors?{
+=abfallend bei Temperaturerhöhung 
+~ansteigend bei Temperaturerhöhung 
+~gleichbleibend bei Temperaturerhöhung  
+~wellenförmiger Verlauf bei Temperaturerhöhung
+} 
